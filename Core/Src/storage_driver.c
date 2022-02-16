@@ -113,7 +113,7 @@ void pack_data_storage(data_storage_t *unpacked_data, uint8_t *flash_buffer)
 	flash_buffer[63] = unpacked_data->satellites;
 }
 
-void pack_data_transmit(data_transmit_t *unpacked_data, uint8_t *transmit_buffer)
+void pack_data_transmit(data_telemetry_t *unpacked_data, uint8_t *transmit_buffer)
 {
 
 	// time

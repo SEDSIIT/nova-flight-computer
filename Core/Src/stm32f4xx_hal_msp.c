@@ -112,7 +112,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = PYRO_SENSE_B_Pin|PYRO_SENSE_A_Pin|BAT_SYS_VOLT_Pin|BAT_PYRO_VOLT_Pin;
+    GPIO_InitStruct.Pin = PYRO_SENSE_B_Pin|PYRO_SENSE_A_Pin|BAT_PYRO_VOLT_Pin|BAT_SYS_VOLT_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -152,7 +152,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     */
     HAL_GPIO_DeInit(GPIOC, PYRO_SENSE_F_Pin|PYRO_SENSE_E_Pin|PYRO_SENSE_D_Pin|PYRO_SENSE_C_Pin);
 
-    HAL_GPIO_DeInit(GPIOA, PYRO_SENSE_B_Pin|PYRO_SENSE_A_Pin|BAT_SYS_VOLT_Pin|BAT_PYRO_VOLT_Pin);
+    HAL_GPIO_DeInit(GPIOA, PYRO_SENSE_B_Pin|PYRO_SENSE_A_Pin|BAT_PYRO_VOLT_Pin|BAT_SYS_VOLT_Pin);
 
   /* USER CODE BEGIN ADC1_MspDeInit 1 */
 
