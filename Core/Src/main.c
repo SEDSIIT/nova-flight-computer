@@ -22,6 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "FLASH_SECTOR_F4.h"
 
 /* USER CODE END Includes */
 
@@ -76,7 +77,9 @@ static void MX_TIM4_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+uint32_t *data = "Hello World";
+uint32_t Rx_Data[10];
+char string[40];
 /* USER CODE END 0 */
 
 /**
@@ -118,7 +121,9 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
+Flash_Write_Data(0x08010000, data,8);
+Flash_Read_Data(0x08010000, Rx_Data,8);
+Convert_To_Str(Rx_Data, string);
   /* USER CODE END 2 */
 
   /* Infinite loop */
