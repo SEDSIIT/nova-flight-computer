@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "FLASH_SECTOR_F4.h"
+//#include "FLASH_SECTOR_F4.h"
 
 /* USER CODE END Includes */
 
@@ -77,9 +77,9 @@ static void MX_TIM4_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint32_t *data = "Hello World";
-uint32_t Rx_Data[10];
-char string[40];
+#define LED_BLUE TIM3->CCR1
+#define LED_GREEN TIM3->CCR2
+extern TIM_HandleTypeDef htim3;
 /* USER CODE END 0 */
 
 /**
@@ -121,9 +121,40 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-Flash_Write_Data(0x08010000, data,8);
-Flash_Read_Data(0x08010000, Rx_Data,8);
-Convert_To_Str(Rx_Data, string);
+
+  HAL_TIM_PWM_Init(&htim3);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
+
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 0;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 4460;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.RepetitionCounter = 0;
+  htim3.Init.AutoReloadPreload=TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+      Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+      Error_Handler();
+  }
+  if
+  (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
+  {
+      Error_Handler();
+  }
+
+  uint16_t duty;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -132,7 +163,20 @@ Convert_To_Str(Rx_Data, string);
   {
     /* USER CODE END WHILE */
 
+
     /* USER CODE BEGIN 3 */
+	  for(duty=0; duty<2000; duty++)
+	  {
+		  LED_GREEN = duty;
+		  LED_BLUE = duty;
+		  HAL_Delay(1);
+	  }
+	  for(duty=2000; duty<1; duty--)
+	  {
+		 LED_GREEN = duty;
+		 LED_BLUE = duty;
+		 HAL_Delay(1);
+	  }
   }
   /* USER CODE END 3 */
 }
@@ -422,7 +466,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 0;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 65535;
+  htim3.Init.Period = 4660;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
