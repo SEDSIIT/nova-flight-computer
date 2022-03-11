@@ -75,10 +75,16 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
   /* USER CODE BEGIN USB_OTG_FS_MspInit 0 */
 
   /* USER CODE END USB_OTG_FS_MspInit 0 */
+
   /** Initializes the peripherals clock
   */
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_CLK48;
-    PeriphClkInitStruct.Clk48ClockSelection = RCC_CLK48CLKSOURCE_PLLQ;
+    PeriphClkInitStruct.PLLSAI.PLLSAIM = 4;
+    PeriphClkInitStruct.PLLSAI.PLLSAIN = 96;
+    PeriphClkInitStruct.PLLSAI.PLLSAIQ = 2;
+    PeriphClkInitStruct.PLLSAI.PLLSAIP = RCC_PLLSAIP_DIV4;
+    PeriphClkInitStruct.PLLSAIDivQ = 1;
+    PeriphClkInitStruct.Clk48ClockSelection = RCC_CLK48CLKSOURCE_PLLSAIP;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
       Error_Handler();
@@ -645,6 +651,22 @@ void HAL_PCDEx_LPM_Callback(PCD_HandleTypeDef *hpcd, PCD_LPM_MsgTypeDef msg)
     break;
   }
 }
+
+#ifdef USBD_HS_TESTMODE_ENABLE
+/**
+  * @brief  Set High speed Test mode.
+  * @param  pdev: Device handle
+  * @param  testmode: test mode
+  * @retval USBD Status
+  */
+USBD_StatusTypeDef USBD_LL_SetTestMode(USBD_HandleTypeDef *pdev, uint8_t testmode)
+{
+  UNUSED(pdev);
+  UNUSED(testmode);
+
+  return USBD_OK;
+}
+#endif /* USBD_HS_TESTMODE_ENABLE */
 
 /**
   * @brief  Static single allocation.
