@@ -64,8 +64,8 @@ all: main-build
 main-build: nova-flight-computer.elf secondary-outputs
 
 # Tool invocations
-nova-flight-computer.elf nova-flight-computer.map: $(OBJS) $(USER_OBJS) C:\Users\mngro\STM32CubeIDE\workspace_1.9.0\nova-flight-computer\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "nova-flight-computer.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\mngro\STM32CubeIDE\workspace_1.9.0\nova-flight-computer\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="nova-flight-computer.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+nova-flight-computer.elf nova-flight-computer.map: $(OBJS) $(USER_OBJS) /home/michael/STM32CubeIDE/workspace_1.9.0/nova-flight-computer/STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "nova-flight-computer.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/michael/STM32CubeIDE/workspace_1.9.0/nova-flight-computer/STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="nova-flight-computer.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
