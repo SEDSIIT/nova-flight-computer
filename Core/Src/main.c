@@ -23,7 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 //#include "FLASH_SECTOR_F4.h"
-
+#include "LED.h"
+#include "BUZZER.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -79,7 +80,10 @@ static void MX_TIM4_Init(void);
 /* USER CODE BEGIN 0 */
 #define LED_BLUE TIM3->CCR1
 #define LED_GREEN TIM3->CCR2
-extern TIM_HandleTypeDef htim3;
+LED status_leds;
+BUZZER buzzer;
+
+
 /* USER CODE END 0 */
 
 /**
@@ -121,40 +125,12 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
+  LED_init(&status_leds, &htim3);
+  BUZZER_init(&buzzer, &htim2);
 
-  HAL_TIM_PWM_Init(&htim3);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
-  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
-
-  htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 4460;
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.RepetitionCounter = 0;
-  htim3.Init.AutoReloadPreload=TIM_AUTORELOAD_PRELOAD_DISABLE;
-
-  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
-  {
-      Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
-  {
-      Error_Handler();
-  }
-  if
-  (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
-  {
-      Error_Handler();
-  }
-
-  uint16_t duty;
+  LED_set_status(status_leds, led_green, led_steady_on);
+  LED_set_status(status_leds, led_blue, led_slow_blink);
+  buzzer.buzzer_tone = buzzer_short_tone;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -162,21 +138,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
-
     /* USER CODE BEGIN 3 */
-	  for(duty=0; duty<2000; duty++)
-	  {
-		  LED_GREEN = duty;
-		  LED_BLUE = duty;
-		  HAL_Delay(1);
-	  }
-	  for(duty=2000; duty<1; duty--)
-	  {
-		 LED_GREEN = duty;
-		 LED_BLUE = duty;
-		 HAL_Delay(1);
-	  }
+    BUZZER_update(&buzzer);
   }
   /* USER CODE END 3 */
 }
