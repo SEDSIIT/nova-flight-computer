@@ -7,15 +7,15 @@
  * drive a pizo-electric buzzer.
  *
  * NOTE:
- * Assumes buzzer is 2048 Hz (actual 2068 Hz)
- * Buzzer is on TIM_CHANNEL_1
+ * Assumes buzzer is 2048 Hz
+ * Buzzer is on TIM_CHANNEL_2
  * Main loop is fast (<10 Hz)
  *
  * AUTHOR:
  * Michael Gromski
  *
  * UPDATED:
- * 03/18/22
+ * 04/02/22
  */
 
 #include "BUZZER.h"
@@ -31,11 +31,11 @@ uint8_t BUZZER_init(BUZZER *dev, TIM_HandleTypeDef *buzzerHandle)
 	dev->previous_time = 0;
 
 	// Make sure buzzer is set correctly
-	dev->buzzerHandle->Instance->PSC = 17;
-	dev->buzzerHandle->Instance->ARR = 2048;
-	dev->buzzerHandle->Instance->CCR1 = 0;
+	dev->buzzerHandle->Instance->PSC = 43-1;
+	dev->buzzerHandle->Instance->ARR = 2048-1;
+	dev->buzzerHandle->Instance->CCR2 = 0;
 
-	HAL_TIM_PWM_Start(buzzerHandle, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(buzzerHandle, TIM_CHANNEL_2);
 
 	return 0;
 }
@@ -54,7 +54,7 @@ uint8_t BUZZER_update(BUZZER *dev)
 	if (dev->buzzer_tone == buzzer_steady_on)
 	{
 
-		dev->buzzerHandle->Instance->CCR1 = 1024;
+		dev->buzzerHandle->Instance->CCR2 = 1024;
 	}
 
 	// short tone (activate for 100ms on a 1000ms interval)
@@ -62,11 +62,11 @@ uint8_t BUZZER_update(BUZZER *dev)
 	{
 		if (dev->elapsed_time <= 100)
 		{
-			dev->buzzerHandle->Instance->CCR1 = 1024;
+			dev->buzzerHandle->Instance->CCR2 = 1024;
 		}
 		else if(dev->elapsed_time > 100 && dev->elapsed_time <= 1000)
 		{
-			dev->buzzerHandle->Instance->CCR1 = 0;
+			dev->buzzerHandle->Instance->CCR2 = 0;
 		}
 		else
 		{
@@ -79,11 +79,11 @@ uint8_t BUZZER_update(BUZZER *dev)
 	{
 		if (dev->elapsed_time <= 800)
 		{
-			dev->buzzerHandle->Instance->CCR1 = 1024;
+			dev->buzzerHandle->Instance->CCR2 = 1024;
 		}
 		else if(dev->elapsed_time > 800 && dev->elapsed_time <= 1000)
 		{
-			dev->buzzerHandle->Instance->CCR1 = 0;
+			dev->buzzerHandle->Instance->CCR2 = 0;
 		}
 		else
 		{
@@ -95,11 +95,11 @@ uint8_t BUZZER_update(BUZZER *dev)
 	{
 		if (dev->elapsed_time <= 125)
 		{
-			dev->buzzerHandle->Instance->CCR1 = 1024;
+			dev->buzzerHandle->Instance->CCR2 = 1024;
 		}
 		else if(dev->elapsed_time > 125 && dev->elapsed_time <= 250)
 		{
-			dev->buzzerHandle->Instance->CCR1 = 0;
+			dev->buzzerHandle->Instance->CCR2 = 0;
 		}
 		else
 		{
@@ -112,11 +112,11 @@ uint8_t BUZZER_update(BUZZER *dev)
 	{
 		if (dev->elapsed_time <= 100)
 		{
-			dev->buzzerHandle->Instance->CCR1 = 1024;
+			dev->buzzerHandle->Instance->CCR2 = 1024;
 		}
 		else if(dev->elapsed_time > 100 && dev->elapsed_time <= 4000)
 		{
-			dev->buzzerHandle->Instance->CCR1 = 0;
+			dev->buzzerHandle->Instance->CCR2 = 0;
 		}
 		else
 		{
@@ -127,7 +127,7 @@ uint8_t BUZZER_update(BUZZER *dev)
 	// steady off
 	else
 	{
-		dev->buzzerHandle->Instance->CCR1 = 0; // faster to stop timer or make duty cycle 0%?
+		dev->buzzerHandle->Instance->CCR2 = 0; // faster to stop timer or make duty cycle 0%?
 	}
 
 	return 0;

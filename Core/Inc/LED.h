@@ -27,8 +27,8 @@ typedef enum
 
 typedef enum
 {
-	led_green = 0,
-	led_blue = 1
+	led_blue = 0,
+	led_green = 1
 } LED_SELECT;
 
 typedef struct

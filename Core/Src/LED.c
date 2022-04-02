@@ -31,8 +31,8 @@ uint8_t LED_init(LED *dev, TIM_HandleTypeDef *pwmledHandle)
 	HAL_TIM_PWM_Start(pwmledHandle, TIM_CHANNEL_2);
 
 	// set default LED status
-	LED_set_status(dev, 0, 0);
-	LED_set_status(dev, 1, 0);
+	LED_set_status(dev, led_green, led_steady_on);
+	LED_set_status(dev, led_blue, led_fast_blink);
 
 	return 0;
 }
@@ -46,7 +46,7 @@ uint8_t LED_set_status(LED *dev, uint8_t led_num, uint8_t led_status)
 	// steady on
 	if (led_status == led_steady_on)
 	{
-		if (led_num == 0)
+		if (led_num == led_blue)
 		{
 			dev->pwmledHandle->Instance->CCR1 = 65535;
 		}
@@ -59,8 +59,8 @@ uint8_t LED_set_status(LED *dev, uint8_t led_num, uint8_t led_status)
 	// blink fast
 	else if (led_status == led_fast_blink)
 	{
-		dev->pwmledHandle->Instance->PSC = 275;
-		if (led_num == 0)
+		dev->pwmledHandle->Instance->PSC = 669-1;
+		if (led_num == led_blue)
 		{
 			dev->pwmledHandle->Instance->CCR1 = 32768;
 		}
@@ -73,8 +73,8 @@ uint8_t LED_set_status(LED *dev, uint8_t led_num, uint8_t led_status)
 	// blink slow
 	else if (led_status == led_slow_blink)
 	{
-		dev->pwmledHandle->Instance->PSC = 1100;
-		if (led_num == 0)
+		dev->pwmledHandle->Instance->PSC = 2676-1;
+		if (led_num == led_blue)
 		{
 			dev->pwmledHandle->Instance->CCR1 = 32768;
 		}
@@ -87,7 +87,7 @@ uint8_t LED_set_status(LED *dev, uint8_t led_num, uint8_t led_status)
 	// off
 	else
 	{
-		if (led_num == 0)
+		if (led_num == led_blue)
 		{
 			dev->pwmledHandle->Instance->CCR1 = 0;
 		}
